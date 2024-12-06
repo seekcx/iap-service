@@ -15,7 +15,7 @@ use Simplephp\IapService\Abstracts\APayment;
 class Payment
 {
     /**
-     * @var $config
+     * @var $config 
      */
     public $config = [];
 

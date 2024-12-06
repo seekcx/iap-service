@@ -26,7 +26,7 @@ abstract class APayment implements IPayment
     /**
      * @var INotify[] $notifyCallbacks
      */
-    protected array $notifyCallbacks;
+    protected $notifyCallbacks;
 
     /**
      * @var mixed
@@ -40,7 +40,6 @@ abstract class APayment implements IPayment
     {
         return static::SP_NAME;
     }
-
 
     /**
      * @param $path
@@ -121,5 +120,14 @@ abstract class APayment implements IPayment
     public function getPayloadData()
     {
         return $this->payloadData;
+    }
+
+    /**
+     * 获取版本
+     * @return string
+     */
+    public function getVersion()
+    {
+        return static::VERSION;
     }
 }

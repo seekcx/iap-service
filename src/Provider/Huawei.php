@@ -10,6 +10,7 @@ use Psr\Http\Message\RequestInterface;
 use Simplephp\IapService\Abstracts\APayment;
 use Simplephp\IapService\Contracts\INotify;
 use Simplephp\IapService\Exception\VerificationException;
+use Simplephp\IapService\Model\NotificationPayload;
 use Simplephp\IapService\Util\JWT;
 use Simplephp\IapService\Util\Request;
 use Simplephp\IapService\Util\Response;
@@ -126,15 +127,17 @@ class Huawei extends APayment
     const CONFIRM_PURCHASE_FOR_SUBSCRIPTION = '/order/harmony/v1/application/purchase/shipped/confirm';
 
     /**
+     * @var array $config 配置
+     */
+    private $config;
+
+    /**
      * @param $config
      * @param string $environment
      * @throws \Exception
      */
     public function __construct($config, string $environment = self::ENV_PRODUCTION)
     {
-        if ($environment != self::ENV_PRODUCTION && $environment != self::ENV_SANDBOX) {
-            throw new InvalidArgumentException('Environmental parameter error');
-        }
         $this->environment = $environment;
         $this->config = $config;
         $this->initialization($config);
@@ -308,7 +311,7 @@ class Huawei extends APayment
                 if (isset($result['jwsSubGroupStatus']) && !empty($result['jwsSubGroupStatus'])) {
                     $result['jwsSubGroupStatus'] = $this->getJwtService()->decodedSignedData($result['jwsSubGroupStatus']);
                 } else {
-                    $result['jwsSubscription'] = [];
+                    $result['jwsSubGroupStatus'] = [];
                 }
                 return Response::success($result);
             }
