@@ -124,7 +124,7 @@ class Huawei extends APayment
      * /subscription/harmony/v1/application/purchase/shipped/confirm
      * @link https://developer.huawei.com/consumer/cn/doc/harmonyos-references-V5/iap-confirm-purchase-for-sub-V5
      */
-    const CONFIRM_PURCHASE_FOR_SUBSCRIPTION = '/order/harmony/v1/application/purchase/shipped/confirm';
+    const CONFIRM_PURCHASE_FOR_SUBSCRIPTION = '/subscription/harmony/v1/application/purchase/shipped/confirm';
 
     /**
      * @var array $config 配置
