@@ -16,11 +16,12 @@
         }
     ],
     "require": {
+        "php": "^7.1",
         "guzzlehttp/guzzle": "^6.5 || ^7.0",
         "phpseclib/phpseclib": "^3.0",
         "ext-openssl": "*",
         "ext-curl": "*",
-        "firebase/php-jwt": "^6.10",
+        "firebase/php-jwt": "6.4.*",
         "ext-json": "*"
     }
 }
