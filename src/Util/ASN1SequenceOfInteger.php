@@ -20,11 +20,11 @@ final class ASN1SequenceOfInteger
         $position = 0;
 
         if (ord($asn1[$position++]) !== (self::ASN1_CONSTRUCTED | self::ASN1_SEQUENCE_IDENTIFIER)) {
-            throw new Exception('ASN1SequenceOfIntegerReader error: not a sequence');
+            throw new \Exception('ASN1SequenceOfIntegerReader error: not a sequence');
         }
 
         if (ord($asn1[$position++]) !== strlen($asn1) - 2) {
-            throw new Exception('ASN1SequenceOfIntegerReader error: incorrect sequence length');
+            throw new \Exception('ASN1SequenceOfIntegerReader error: incorrect sequence length');
         }
 
         $hexParts = [];
@@ -32,7 +32,7 @@ final class ASN1SequenceOfInteger
 
         do {
             if (ord($asn1[$position++]) !== self::ASN1_INTEGER) {
-                throw new Exception('ASN1SequenceOfIntegerReader error: entry is not an integer');
+                throw new \Exception('ASN1SequenceOfIntegerReader error: entry is not an integer');
             }
 
             $length = ord($asn1[$position++]);
@@ -49,15 +49,22 @@ final class ASN1SequenceOfInteger
             }
 
             $hexParts[] = join(array_map(
-                fn (string $chr) => str_pad(dechex(ord($chr)), 2, '0', STR_PAD_LEFT),
+                function (string $chr) {
+                    return str_pad(dechex(ord($chr)), 2, '0', STR_PAD_LEFT);
+                },
                 $bytesArray
             ));
 
             $position += $length;
         } while ($position < $asn1Length);
 
-        $maxLength = array_reduce($hexParts, fn (int $carry, string $item) => max($carry, strlen($item)), 0);
-        return join(array_map(fn (string $hex) => str_pad($hex, $maxLength, '0', STR_PAD_LEFT), $hexParts));
+        $maxLength = array_reduce($hexParts, function (int $carry, string $item) {
+            return max($carry, strlen($item));
+        }, 0);
+
+        return join(array_map(function (string $hex) use ($maxLength) {
+            return str_pad($hex, $maxLength, '0', STR_PAD_LEFT);
+        }, $hexParts));
     }
 
     /**
@@ -68,7 +75,7 @@ final class ASN1SequenceOfInteger
         $length = strlen($hexSignature);
 
         if ($length % 2) {
-            throw new Exception('Invalid signature length');
+            throw new \Exception('Invalid signature length');
         }
 
         $hexParts = str_split($hexSignature, $length / 2);
@@ -87,11 +94,15 @@ final class ASN1SequenceOfInteger
         }
 
         $encodedIntegers = join(array_map(
-            fn (string $hexPart) => join([
-                chr(self::ASN1_INTEGER),
-                chr(strlen($hexPart) / 2),
-                join(array_map(fn (string $hex) => chr(hexdec($hex)), str_split($hexPart, 2))),
-            ]),
+            function (string $hexPart) {
+                return join([
+                    chr(self::ASN1_INTEGER),
+                    chr(strlen($hexPart) / 2),
+                    join(array_map(function (string $hex) {
+                        return chr(hexdec($hex));
+                    }, str_split($hexPart, 2))),
+                ]);
+            },
             $hexParts
         ));
 
