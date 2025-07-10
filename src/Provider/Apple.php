@@ -743,7 +743,7 @@ class Apple extends APayment
     }
 
     /**
-     * @return bool
+     * @return mixed
      */
     public function notifyWithResult()
     {
